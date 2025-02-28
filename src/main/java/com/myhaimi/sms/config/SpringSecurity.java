@@ -1,6 +1,6 @@
 package com.myhaimi.sms.config;
 
-import com.myhaimi.sms.service.impl.UserDetailsServiceImpl;
+import com.myhaimi.sms.service.impl.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 @EnableWebSecurity
 public class SpringSecurity {
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private UserDetailsService userDetailsService;
 
 
     @Bean
@@ -27,15 +27,14 @@ public class SpringSecurity {
 
 
         return http.authorizeHttpRequests(request -> request
-                        .requestMatchers("/user/**").permitAll()
-                        .requestMatchers("/journal/**").authenticated()
+                        .requestMatchers("/public/**"  ).permitAll()
+                        .requestMatchers("/journal/**", "/user/**").authenticated()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }
-
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
@@ -45,13 +44,10 @@ public class SpringSecurity {
         return authProvider;
     }
 
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
-
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

@@ -1,22 +1,21 @@
 package com.myhaimi.sms.service.impl;
 
 import com.myhaimi.sms.entity.User;
-import com.myhaimi.sms.repository.UserRepo;
+import com.myhaimi.sms.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
     @Autowired
-    private UserRepo userRepo;
+    private IUserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user=userRepo.findByUsername(username);
+        User user=userService.findByUsername(username);
         if(user!=null){
             UserDetails userDetails=org.springframework.security.core.userdetails.User.builder()
                     .username(user.getUsername())
