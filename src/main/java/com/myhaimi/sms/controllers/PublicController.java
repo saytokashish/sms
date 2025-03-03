@@ -3,7 +3,7 @@ package com.myhaimi.sms.controllers;
 import com.myhaimi.sms.utils.JwtUtil;
 import com.myhaimi.sms.entity.User;
 import com.myhaimi.sms.service.IUserService;
-import com.myhaimi.sms.service.impl.UserDetailsService;
+import com.myhaimi.sms.service.impl.UserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ public class PublicController {
     private JwtUtil jwtUtil;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
     private IUserService userService;

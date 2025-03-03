@@ -17,5 +17,6 @@ public class User {
     private String username;
     @NotNull
     private String password;
+    private String email;
     private List<String> roles;
 }

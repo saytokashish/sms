@@ -51,6 +51,9 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 	compileOnly 'jakarta.servlet:jakarta.servlet-api:6.1.0'
 
+	//OAuth2
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
 }
 
 tasks.named('test') {
