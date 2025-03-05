@@ -32,7 +32,8 @@ public class SpringSecurity {
         return http.authorizeHttpRequests(request -> request
                         .requestMatchers("/public/**",
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**"
+                                "/v3/api-docs/**",
+                                "/auth/google/**"
                                 ).permitAll()
                         .requestMatchers( "/user/**").authenticated()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
