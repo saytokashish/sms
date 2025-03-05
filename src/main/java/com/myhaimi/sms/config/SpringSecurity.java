@@ -30,13 +30,16 @@ public class SpringSecurity {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         return http.authorizeHttpRequests(request -> request
-                        .requestMatchers("/public/**", "/swagger-ui/**" ).permitAll()
+                        .requestMatchers("/public/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
+                                ).permitAll()
                         .requestMatchers( "/user/**").authenticated()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
-                .csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                        .csrf(AbstractHttpConfigurer::disable)
+                        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                        .build();
     }
 
     @Bean
