@@ -1,9 +1,7 @@
 package com.myhaimi.sms.controllers;
 
-import com.myhaimi.sms.entity.User;
-import com.myhaimi.sms.repository.UserRepo;
+import com.myhaimi.sms.DTO.UserDTO;
 import com.myhaimi.sms.service.IUserService;
-import com.myhaimi.sms.service.impl.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +20,7 @@ public class UserController {
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @PutMapping
-    public ResponseEntity<?> updateUser(@RequestBody User user){
+    public ResponseEntity<?> updateUser(@RequestBody UserDTO user){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName= authentication.getName();
         userService.updateUser(user, userName);

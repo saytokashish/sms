@@ -1,13 +1,11 @@
 package com.myhaimi.sms.entity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.List;
-
-@Entity
 @Data
-@Table(name = "USER")
+@Entity
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,8 +13,8 @@ public class User {
     private int id;
     @Column(name = "username", nullable = false , unique = true)
     private String username;
-    @NotNull
     private String password;
+    @Column(nullable = false, unique = true)
     private String email;
     private List<String> roles;
 }

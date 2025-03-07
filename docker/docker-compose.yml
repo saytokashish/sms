@@ -20,7 +20,7 @@ services:
   sms:
     build: ../
     ports:
-      - "8085:8080"
+      - "8080:8080"
     container_name: sms
     networks:
       - my-network

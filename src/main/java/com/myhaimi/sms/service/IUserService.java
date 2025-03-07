@@ -1,11 +1,14 @@
 package com.myhaimi.sms.service;
 
-
+import com.myhaimi.sms.DTO.LoginDTO;
+import com.myhaimi.sms.DTO.UserDTO;
 import com.myhaimi.sms.entity.User;
+import org.springframework.http.ResponseEntity;
 
 public interface IUserService {
-    User createUser(User user);
-    User findByUsername(String username);
+    void createUser(UserDTO user);
+    UserDTO findByUsername(String username);
     User getUserById(int id);
-    User updateUser(User user, String username);
+    UserDTO updateUser(UserDTO user, String username);
+    ResponseEntity<String>  Login(LoginDTO user);
 }

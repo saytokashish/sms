@@ -1,6 +1,6 @@
 package com.myhaimi.sms.service.impl;
 
-import com.myhaimi.sms.entity.User;
+import com.myhaimi.sms.DTO.UserDTO;
 import com.myhaimi.sms.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,14 +15,13 @@ public class UserDetailsServiceImpl implements org.springframework.security.core
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user=userService.findByUsername(username);
+        UserDTO user=userService.findByUsername(username);
         if(user!=null){
-            UserDetails userDetails=org.springframework.security.core.userdetails.User.builder()
+            return org.springframework.security.core.userdetails.User.builder()
                     .username(user.getUsername())
                     .password(user.getPassword())
                     .roles(user.getRoles().toArray(new String[0]))
                     .build();
-            return userDetails;
         }
         throw new UsernameNotFoundException("User not found with username: " + username);
     }

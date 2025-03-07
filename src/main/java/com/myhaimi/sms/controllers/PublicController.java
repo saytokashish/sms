@@ -1,16 +1,18 @@
 package com.myhaimi.sms.controllers;
 
-import com.myhaimi.sms.utils.JwtUtil;
-import com.myhaimi.sms.entity.User;
+import com.myhaimi.sms.DTO.LoginDTO;
+import com.myhaimi.sms.DTO.UserDTO;
+import com.myhaimi.sms.utils.CommonUtil;
 import com.myhaimi.sms.service.IUserService;
-import com.myhaimi.sms.service.impl.UserDetailsServiceImpl;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,34 +24,30 @@ public class PublicController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
-
-    @Autowired
     private IUserService userService;
 
-    @GetMapping("/health-check")
-    public String getHealth(){
-        return "OK";
-    }
-
     @PostMapping("/signup")
-    public ResponseEntity<User> signup(@RequestBody User user){
-        User savedUser= userService.createUser(user);
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    public ResponseEntity<?> signup(@Valid @RequestBody UserDTO user, BindingResult result){
+        ResponseEntity<?> res = CommonUtil.dtoBindingResults(result);
+        if (res.getStatusCode().is4xxClientError()) return res;
+
+        try {
+             userService.createUser(user);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException e) {
+            return new ResponseEntity<>("email or username already exists",HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            return new ResponseEntity<>("unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user){
-        try{
+    public ResponseEntity<String> login(@RequestBody LoginDTO user){
+        try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-            UserDetails userDetails=userDetailsService.loadUserByUsername(user.getUsername());
-            String jwt = jwtUtil.generateToken(userDetails.getUsername());
-            return new ResponseEntity<>(jwt,HttpStatus.OK);
-        }catch (Exception e){
+            return userService.Login(user);
+        } catch (Exception e){
             log.error("Exception occurred while createAuthenticationToken",e);
             return new ResponseEntity<>("Incorrect username or password",HttpStatus.BAD_REQUEST);
         }

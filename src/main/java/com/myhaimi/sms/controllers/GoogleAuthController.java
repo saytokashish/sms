@@ -1,6 +1,5 @@
 package com.myhaimi.sms.controllers;
 
-import com.myhaimi.sms.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +17,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import java.util.*;
 import com.myhaimi.sms.service.impl.UserDetailsServiceImpl;
-import com.myhaimi.sms.repository.UserRepo;
 import com.myhaimi.sms.utils.JwtUtil;
 
 @RestController
@@ -40,9 +38,6 @@ public class GoogleAuthController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserRepo userRepository;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -67,16 +62,10 @@ public class GoogleAuthController {
             if (userInfoResponse.getStatusCode() == HttpStatus.OK) {
                 Map<String, Object> userInfo = userInfoResponse.getBody();
                 String email = (String) userInfo.get("email");
-                UserDetails userDetails = null;
                 try{
-                    userDetails = userDetailsService.loadUserByUsername(email);
+                    userDetailsService.loadUserByUsername(email);
                 }catch (Exception e){
-                    User user = new User();
-                    user.setEmail(email);
-                    user.setUsername(email);
-                    user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
-                    user.setRoles(Arrays.asList("USER"));
-                    userRepository.save(user);
+                    return new ResponseEntity<>("user doesn't exist. please register", HttpStatus.BAD_REQUEST);
                 }
                 String jwtToken = jwtUtil.generateToken(email);
                 return ResponseEntity.ok(Collections.singletonMap("token", jwtToken));
