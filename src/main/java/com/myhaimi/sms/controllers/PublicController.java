@@ -42,7 +42,9 @@ public class PublicController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO user){
+    public ResponseEntity<?> login(@Valid @RequestBody LoginDTO user,BindingResult result){
+        ResponseEntity<?> res = CommonUtil.dtoBindingResults(result);
+        if (res.getStatusCode().is4xxClientError()) return res;
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));

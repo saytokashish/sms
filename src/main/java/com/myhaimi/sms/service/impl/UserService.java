@@ -17,9 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -47,13 +44,13 @@ public class UserService implements IUserService {
     @Override
     public void createUser(UserDTO userDTO) {
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        userDTO.setRoles(List.of("USER"));
+        //userDTO.setRoles(Set.of("USER"));
         userRepo.save(this.toEntity(userDTO));
     }
 
     @Override
     public UserDTO findByUsername(String username){
-        return this.toDTO(userRepo.findByUsername(username).get(0));
+        return this.toDTO(userRepo.findByUsername(username).getFirst());
     }
 
     @Override

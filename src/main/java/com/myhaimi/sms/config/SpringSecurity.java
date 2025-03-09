@@ -36,7 +36,7 @@ public class SpringSecurity {
                                 "/auth/google/**"
                                 ).permitAll()
                         .requestMatchers( "/user/**").authenticated()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasRole("SUPER ADMIN")
                         .anyRequest().authenticated())
                         .csrf(AbstractHttpConfigurer::disable)
                         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
